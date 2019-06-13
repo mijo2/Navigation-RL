@@ -6,9 +6,13 @@ The task of this project is to create, train and test an agent that learns to pl
 
 The environment is a plane with yellow and blue bananas in the plane. 
 
+*To append a gif of the environment
+
 ### Goal
 
 The goal is to collect as many yellow bananas as possible while avoiding blue bananas.
+
+*To append two images together, one yellow banana and one blue banana
 
 ### Rewards
 
@@ -20,11 +24,15 @@ The reward function looks something like below -
 
 In unity environment, when there are multiple agents that are playing with or against one another, it is feasible to train a single Q value approximation for both of them. Both the agents will obviously have different states and may take different actions accordingly, but they will effectively use the same action-value function to approximate the values and imporve on the function accordingly together
 
+*To append image of the agent and brain diagram from unity posts or readme
+
 For example - Suppose there are multiple agents 
 
 ### State representation
 
 ### Action representation
+
+*To append action diagram explaining the actions
 
 # Deep Q Learning
 
@@ -35,6 +43,8 @@ For this task, deep Q learning is used to train the agent.
 ### Policy Iteration
 
 For each time step, we will select an action based on the epsilon-greedy policy, and then estimate the action value functions according to the action taken and the state the agent is currently in and the next state.
+
+*To append an image explaining policy iteration(the V looking diagram)
 
 ### Action value function estimation
 
@@ -47,6 +57,8 @@ Here the Q(s,a) is a function approximation namely, a deep neural network archit
 ### Epsilon greedy policy
 
 With probability epsilon, we will select a random action to be taken and with probability 1-epsilon, we will take an action that maximises action value function for a particular given current state. 
+
+*To append image explaining epsilon-greedy policy
 
 ## Deep Q learning basics
 
@@ -72,8 +84,13 @@ where beta is in order of 1e-3.
 
 ## Architecture
 
+*To append the image explaining the architecture
+
 # Results
 
-# Demonstration
+*To append an image giving out the results
 
+# Demonstration
+ 
+*To append a gif demonstrating a trained agent
 
