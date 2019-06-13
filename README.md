@@ -7,8 +7,8 @@ After creating the conda environment using the commands mentioned below and acti
 
 ### Creating the conda environment
 
-`conda create --name bananas python=3.6`
- `conda activate bananas`
+`conda create --name bananas python=3.6`\\
+`conda activate bananas`
 
 ### Installing the requirements
 
