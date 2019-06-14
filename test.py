@@ -2,14 +2,13 @@ from unityagents import UnityEnvironment
 import numpy as np
 from dqn_agent import Agent
 from model import QNetwork
+import torch
 
-env = UnityEnvironment(file_name="Banana_Linux/Banana.x86_64")
+env = UnityEnvironment(file_name="Banana_Linux/Banana.x86_64", no_graphics=True)
 
 # get the default brain
 brain_name = env.brain_names[0]
 brain = env.brains[brain_name]
-
-env_info = env.reset(train_mode=True)[brain_name]
 
 # reset the environment
 env_info = env.reset(train_mode=True)[brain_name]
@@ -27,7 +26,9 @@ print('States look like:', state)
 state_size = len(state)
 print('States have length:', state_size)
 
-trained_agent = QNetwork(state_size, action_size)
+data = torch.load("data_checkpoint.chkpt")
+
+trained_agent = QNetwork(state_size, action_size).load_state_dict(data['parameters'])
 
 VAL_TESTING  = 10
 scores = []
@@ -50,3 +51,9 @@ for i in range(VAL_TESTING):
             break 
 
 print(f"For {VAL_TESTING} episodes, the average score is {np.mean(scores)}")
+fig = plt.figure()
+ax = fig.add_subplot(111)
+plt.plot(np.arange(len(scores)), scores)
+plt.ylabel('Score')
+plt.xlabel('Episode #')
+plt.savefig("test_results.png")

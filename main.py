@@ -4,7 +4,7 @@ from dqn_agent import Agent
 from collections import deque
 import torch
 
-env = UnityEnvironment(file_name="Banana_Linux/Banana.x86_64")
+env = UnityEnvironment(file_name="Banana_Linux/Banana.x86_64", no_graphics=True)
 
 # get the default brain
 brain_name = env.brain_names[0]
@@ -28,6 +28,8 @@ print('States look like:', state)
 state_size = len(state)
 print('States have length:', state_size)
 
+SAVE_EVERY = 15
+
 def dqn(agent, env, n_episodes=1800, max_t=10000, eps_start=1.0, eps_end=0.01, eps_decay=0.995):
     """Deep Q-Learning.
     
@@ -42,8 +44,20 @@ def dqn(agent, env, n_episodes=1800, max_t=10000, eps_start=1.0, eps_end=0.01, e
     scores = []                        # list containing scores from each episode
     scores_window = deque(maxlen=100)  # last 100 scores
     eps = eps_start
+    global state_size
+    global action_size
+    base_epoch = 1
+    
+    checkpoint_exists = os.path.exists("data_checkpoint.chkpt")
+    if checkpoint_exists:
+        data = torch.load("data_checkpoint.chkpt")
+        base_epoch = data["n_epochs"]
+        agent.qnetwork_local = QNetwork(state_size, action_size).load_state_dict(data["parameters"])
+        agent.qnetwork_target = agent.qnetwork_local
+        scores = data["scores"]
+        scores_window = data["scores_window"]
 
-    for i_episode in range(1, n_episodes+1):
+    for i_episode in range(base_epoch, n_episodes+1):
         env_info = env.reset(train_mode=True)[brain_name]
         state = env_info.vector_observations[0]
         score = 0
@@ -61,13 +75,16 @@ def dqn(agent, env, n_episodes=1800, max_t=10000, eps_start=1.0, eps_end=0.01, e
         scores_window.append(score)       # save most recent score
         scores.append(score)              # save most recent score
         eps = max(eps_end, eps_decay*eps) # decrease epsilon
-        print('\rEpisode {}\tAverage Score: {:.2f}'.format(i_episode, np.mean(scores_window)), end="")
+        print('\rEpisode {}\tAverage Score: {:.2f}, Current score: {:2f}'.format(i_episode, np.mean(scores_window), score), end="")
     
-    data = {
-        "parameters": agent.qnetwork_target.state_dict(),
-        "number_of_epochs": n_episodes
-    }
-    torch.save(data, "data_checkpoint.pth")
+        if i_episode % SAVE_EVERY == 0:
+            data = {
+                "parameters": agent.qnetwork_target.state_dict(),
+                "n_epochs": n_episodes + base_epoch, 
+                "scores": scores,
+                "scores_window": scores_window
+            }
+            torch.save(data, "data_checkpoint.chkpt")
         
     return scores
 
@@ -81,3 +98,4 @@ plt.plot(np.arange(len(scores)), scores)
 plt.ylabel('Score')
 plt.xlabel('Episode #')
 plt.show()
+plt.savefig("train_results.png")
