@@ -3,6 +3,7 @@ import numpy as np
 from dqn_agent import Agent
 from model import QNetwork
 import torch
+import matplotlib.pyplot as plt
 
 env = UnityEnvironment(file_name="Banana_Linux/Banana.x86_64", no_graphics=True)
 
@@ -11,7 +12,7 @@ brain_name = env.brain_names[0]
 brain = env.brains[brain_name]
 
 # reset the environment
-env_info = env.reset(train_mode=True)[brain_name]
+env_info = env.reset(train_mode=False)[brain_name]
 
 # number of agents in the environment
 print('Number of agents:', len(env_info.agents))
@@ -28,20 +29,22 @@ print('States have length:', state_size)
 
 data = torch.load("data_checkpoint.chkpt")
 
-trained_agent = QNetwork(state_size, action_size).load_state_dict(data['parameters'])
+trained_agent = QNetwork(state_size, action_size)
+trained_agent.load_state_dict(data['parameters'])
 
 VAL_TESTING  = 10
 scores = []
-env_info = env.reset(train_mode=True)[brain_name]
+env_info = env.reset(train_mode=False)[brain_name]
 state = env_info.vector_observations[0]
 
 for i in range(VAL_TESTING):
-    state = env.reset()
+    env_info = env.reset(train_mode=False)[brain_name]
+    state = torch.from_numpy(env_info.vector_observations[0]).type(torch.FloatTensor)
     score = 0
     while True:
-        action = trained_agent(state).max(1)[1]
-        env_info = env.step(action)[brain_name]        # send the action to the environment
-        next_state = env_info.vector_observations[0]   # get the next state
+        action = trained_agent(state.unsqueeze(0).type(torch.FloatTensor)).max(1)[1]
+        env_info = env.step(action.item())[brain_name]        # send the action to the environment
+        next_state = torch.from_numpy(env_info.vector_observations[0])   # get the next state
         reward = env_info.rewards[0]                   # get the reward
         done = env_info.local_done[0] 
         state = next_state

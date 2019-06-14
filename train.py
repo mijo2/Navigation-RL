@@ -4,14 +4,14 @@ from dqn_agent import Agent
 from collections import deque
 import torch
 from model import QNetwork
+import os
+import matplotlib.pyplot as plt
 
 env = UnityEnvironment(file_name="Banana_Linux/Banana.x86_64", no_graphics=True)
 
 # get the default brain
 brain_name = env.brain_names[0]
 brain = env.brains[brain_name]
-
-env_info = env.reset(train_mode=True)[brain_name]
 
 # reset the environment
 env_info = env.reset(train_mode=True)[brain_name]
@@ -48,7 +48,9 @@ def dqn(agent, env, n_episodes=1800, max_t=10000, eps_start=1.0, eps_end=0.01, e
     global state_size
     global action_size
     base_epoch = 1
-    
+    print("Variable declaration works fine")    
+
+
     checkpoint_exists = os.path.exists("data_checkpoint.chkpt")
     if checkpoint_exists:
         data = torch.load("data_checkpoint.chkpt")
@@ -57,11 +59,13 @@ def dqn(agent, env, n_episodes=1800, max_t=10000, eps_start=1.0, eps_end=0.01, e
         agent.qnetwork_target = agent.qnetwork_local
         scores = data["scores"]
         scores_window = data["scores_window"]
+    print("Checkpoint loading works fine")
 
     for i_episode in range(base_epoch, n_episodes+1):
         env_info = env.reset(train_mode=True)[brain_name]
         state = env_info.vector_observations[0]
         score = 0
+        print("Resetting the environment works fine")
         for t in range(max_t):
             action = agent.act(state, eps)
             env_info = env.step(action)[brain_name]        # send the action to the environment
@@ -89,7 +93,9 @@ def dqn(agent, env, n_episodes=1800, max_t=10000, eps_start=1.0, eps_end=0.01, e
         
     return scores
 
+print("FUnction declaration works fine")
 agent = Agent(state_size, action_size)
+print("Agent loading works fine")
 scores = dqn(agent, env)
 
 # plot the scores
@@ -98,5 +104,5 @@ ax = fig.add_subplot(111)
 plt.plot(np.arange(len(scores)), scores)
 plt.ylabel('Score')
 plt.xlabel('Episode #')
-plt.show()
+# plt.show()
 plt.savefig("train_results.png")
