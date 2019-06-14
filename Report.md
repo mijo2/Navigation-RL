@@ -6,13 +6,11 @@ The task of this project is to create, train and test an agent that learns to pl
 
 The environment is a plane with yellow and blue bananas in the plane. 
 
-*To append a gif of the environment
+![alt text](https://github.com/mijo2/Navigation-RL/blob/master/report/banana.gif)
 
 ### Goal
 
 The goal is to collect as many yellow bananas as possible while avoiding blue bananas.
-
-*To append two images together, one yellow banana and one blue banana
 
 ### Rewards
 
@@ -24,15 +22,21 @@ The reward function looks something like below -
 
 In unity environment, when there are multiple agents that are playing with or against one another, it is feasible to train a single Q value approximation for both of them. Both the agents will obviously have different states and may take different actions accordingly, but they will effectively use the same action-value function to approximate the values and imporve on the function accordingly together
 
-*To append image of the agent and brain diagram from unity posts or readme
+![alt text](https://github.com/mijo2/Navigation-RL/blob/master/report/brain_image.png)
 
 For example - Suppose there are multiple agents 
 
 ### State representation
 
+State of the agent is a vector of size 37.
+
 ### Action representation
 
-*To append action diagram explaining the actions
+There are 4 possible actions:
+1. Forward
+2. Backward
+3. Left
+4. Right
 
 # Deep Q Learning
 
@@ -44,7 +48,7 @@ For this task, deep Q learning is used to train the agent.
 
 For each time step, we will select an action based on the epsilon-greedy policy, and then estimate the action value functions according to the action taken and the state the agent is currently in and the next state.
 
-*To append an image explaining policy iteration(the V looking diagram)
+![alt_text](https://github.com/mijo2/Navigation-RL/blob/master/report/MC_control.png)
 
 ### Action value function estimation
 
@@ -58,7 +62,7 @@ Here the Q(s,a) is a function approximation namely, a deep neural network archit
 
 With probability epsilon, we will select a random action to be taken and with probability 1-epsilon, we will take an action that maximises action value function for a particular given current state. 
 
-*To append image explaining epsilon-greedy policy
+![alt_text](https://github.com/mijo2/Navigation-RL/blob/master/report/epsilon-greedy.png)
 
 ## Deep Q learning basics
 
@@ -84,13 +88,32 @@ where beta is in order of 1e-3.
 
 ## Architecture
 
-*To append the image explaining the architecture
+The architecture of the Q Network contains 4 layers, two hidden layers, one input layer and one output layer.
+
+Input layer - 37 
+Hidden layer 1 - 64
+Hidden layer 2 - 64
+Output layer - 4
+
+![alt_text](https://github.com/mijo2/Navigation-RL/blob/master/report/nerual_architecture.png)
+
+## Hyperparameters
+
+1. Batch size: 64
+2. Soft update parameter TAU: 1e-3
+3. Learning rate: 5e-4
+4. GAMMA: 0.99
+5. Memory buffer size: 1e5
 
 # Results
 
-*To append an image giving out the results
+## Training results 
 
-# Demonstration
- 
-*To append a gif demonstrating a trained agent
+The plot scores vs episodes
+
+![alt_text](https://github.com/mijo2/Navigation-RL/blob/master/report/train_results.png)
+
+## Test results
+
+Average score for 10 episodes = 15.9
 
