@@ -3,6 +3,7 @@ import numpy as np
 from dqn_agent import Agent
 from collections import deque
 import torch
+from model import QNetwork
 
 env = UnityEnvironment(file_name="Banana_Linux/Banana.x86_64", no_graphics=True)
 
