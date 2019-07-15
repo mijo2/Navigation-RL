@@ -1,6 +1,22 @@
 # Navigation-RL
 This is implementation of a RL agent that learns to play the Banana Collector game.
 
+# About the Environment
+
+The environment is a plane with yellow and blue bananas in the plane. 
+
+![alt text](https://github.com/mijo2/Navigation-RL/blob/master/report/banana.gif)
+
+### Goal
+
+The goal is to collect as many yellow bananas as possible while avoiding blue bananas.
+
+### Rewards
+
+The reward function looks something like below -
+  1. `+1` for interaction with yellow banana
+  2. `-1` for interaction with blue banana
+
 ## Creating an environment that fulfills the requirements 
 
 After creating the conda environment using the commands mentioned below and activating it, you will be able to run the code in this repository.
