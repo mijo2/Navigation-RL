@@ -10,7 +10,7 @@ The environment is a plane with yellow and blue bananas in the plane.
 
 ### Goal
 
-The goal is to collect as many yellow bananas as possible while avoiding blue bananas.
+The goal is to collect as many yellow bananas as possible while avoiding blue bananas. The more the yellow bananas and the fewer the blue bananas, the more the score of the agent in an episode
 
 ### Rewards
 
@@ -20,25 +20,27 @@ The reward function looks something like below -
   
 ### Introduction to brains
 
-In unity environment, when there are multiple agents that are playing with or against one another, it is feasible to train a single Q value approximation for both of them. Both the agents will obviously have different states and may take different actions accordingly, but they will effectively use the same action-value function to approximate the values and imporve on the function accordingly together
+In unity environment, when there are multiple agents that are playing with or against one another, it is feasible to train a single Q value approximation for both of them. Both the agents will obviously have different states and may take different actions accordingly, but they will effectively use the same action-value function to approximate the values and improve on the function accordingly together.
 
-![alt text](https://github.com/mijo2/Navigation-RL/blob/master/report/brain_image.png)
-
-For example - Suppose there are multiple agents 
+![alt text](https://github.com/mijo2/Navigation-RL/blob/master/report/brain_image.png) 
 
 ### State representation
 
-State of the agent is a vector of size 37.
+State of the agent is a vector of size 37. The state space contains the agent's velocity, along with ray-based perception of objects around agent's forward direction. Given this information, the agent has to learn how to best select actions. 
 
 ### Action representation
 
 There are 4 possible actions:
-1. Forward
-2. Backward
-3. Left
-4. Right
+* `0`: Forward
+* `1`: Backward
+* `2`: Left
+* `3`: Right
 
-# Deep Q Learning
+## End Goal
+
+The task is episodic, and in order to solve the environment, an agent must get an average score of +13 over 100 consecutive episodes.
+
+# Learning Algorithm: Deep Q Learning
 
 For this task, deep Q learning is used to train the agent.
 
@@ -86,6 +88,19 @@ Q' = beta * Q' + (1-beta) * Q
 
 where beta is in order of 1e-3.
 
+### DQN in a nutshell
+
+What DQN does is simply:
+
+  1. Perform an action based on epsilon-greedy policy
+  2. Store a transition in the memory buffer
+  3. Samples some transitions from the memory buffer and use the target network to estimate the target estimates for each transition
+  4. Calculate the loss function based on policy values and target values
+  5. Backpropagate the loss in the policy network
+  6. Update the target network softly(compared to the policy network)
+
+Here, policy network is synonymous to Local Network and target value = R(t) + gamma * max(Q'(s',a)) where Q'(s',a) is the target network value
+
 ## Architecture
 
 The architecture of the Q Network contains 4 layers, two hidden layers, one input layer and one output layer.
@@ -103,11 +118,11 @@ Output layer - 4
 2. Soft update parameter TAU: 1e-3
 3. Learning rate: 5e-4
 4. GAMMA: 0.99
-5. Memory buffer size: 1e5
+5. Memory buffer size: 1e5 
 
-# Results
+These hyper-parameter values proved to be more effective and batch size 64 was the fastest one to train. Memory buffer size of 5th order proved to be efficient as larger memory buffers proved to be costly and slow. This learning rate was better compared to 1e-4 and 1e-5 based on speed(efficiency increase per unit time) of the training.
 
-## Training results 
+# Plot of Rewards
 
 The plot scores vs episodes
 
@@ -116,4 +131,12 @@ The plot scores vs episodes
 ## Test results
 
 Average score for 10 episodes = 15.9
+
+# Ideas for Future work
+
+A bunch of things can be done to improve the agent's performance:-
+
+1. Incoporating prioritized experience replay in the agent has the potential to improve the agent's performance significantly.
+2. Using newer approaches like dueling dqn, double dqn and Rainbow may yield better results.
+3. Better exploration strategies can be used to improve the training efficiency
 
